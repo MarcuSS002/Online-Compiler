@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: online-compiler-backend
+    env: node
+    plan: free
+    root: ./backend
+    buildCommand: npm install && npm run build
+    startCommand: node dist/index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: redis
+          property: connectionString
+      - key: PORT
+        value: 3000
+
+  - type: redis
+    name: redis
+    plan: free
+    ipAllowList: []
+
+  - type: pserv
+    name: postgres
+    plan: free
+    ipAllowList: []
