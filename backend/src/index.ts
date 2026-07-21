@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import { createClient } from "redis";
 import { ensureSubmissionStatusEnum, prisma } from "../src/db.js";
-
+import "dotenv/config";
 
 function normalizeLanguage(language: string) {
     if (language === "python") {
@@ -16,13 +16,17 @@ function normalizeLanguage(language: string) {
     return language;
 }
 
-const client = createClient();
-client.connect();
+const PORT = process.env.PORT || 3000;
+const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
+const CORS_ORIGIN = process.env.CORS_ORIGIN || "http://localhost:5173";
+
+const client = createClient({ url: REDIS_URL });
+await client.connect();
 
 const app = express()
 
 app.use(express.json())
-app.use(cors())
+app.use(cors({ origin: CORS_ORIGIN }))
 
 await ensureSubmissionStatusEnum();
 
@@ -63,4 +67,6 @@ app.get("/submission/:submissionId", async (req, res) => {
 })
 
 
-app.listen(3000);
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
