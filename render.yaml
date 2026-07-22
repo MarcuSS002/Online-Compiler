@@ -25,7 +25,7 @@ services:
     plan: free
     ipAllowList: []
 
-  - type: pserv
+  - type: pgsql
     name: postgres
     plan: free
     ipAllowList: []
