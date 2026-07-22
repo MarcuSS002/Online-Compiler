@@ -5,7 +5,7 @@ services:
     plan: free
     root: ./backend
     buildCommand: npm install && npm run build
-    startCommand: node dist/index.js
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -13,25 +13,8 @@ services:
         fromDatabase:
           name: postgres
           property: connectionString
-      - key: REDIS_URL
-        fromService:
-          name: redis
-          property: connectionString
       - key: PORT
         value: 3000
-      - key: UPSTASH_REDIS_REST_URL
-        fromService:
-          name: redis
-          property: restUrl
-      - key: UPSTASH_REDIS_REST_TOKEN
-        fromService:
-          name: redis
-          property: restToken
-  - type: redis
-    name: redis
-    plan: free
-    ipAllowList: []
-
   - type: postgres
     name: postgres
     plan: free
