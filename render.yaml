@@ -19,7 +19,14 @@ services:
           property: connectionString
       - key: PORT
         value: 3000
-
+      - key: UPSTASH_REDIS_REST_URL
+        fromService:
+          name: redis
+          property: restUrl
+      - key: UPSTASH_REDIS_REST_TOKEN
+        fromService:
+          name: redis
+          property: restToken
   - type: redis
     name: redis
     plan: free
