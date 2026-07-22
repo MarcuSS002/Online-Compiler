@@ -2,7 +2,7 @@ import { createClient } from "redis";
 import fs from "fs";
 import path from "path";
 import { spawn, SpawnOptionsWithoutStdio } from "child_process";
-import { prisma } from "./db";
+import { prisma } from "./db.js";
 
 const TIMEOUT_MS = 5000;
 const MAX_OUTPUT_BYTES = 1024 * 512; // 512 KB cap — prevents memory exhaustion from runaway output
