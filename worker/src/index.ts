@@ -1,8 +1,12 @@
-import { createClient } from "redis";
+import { Redis } from "@upstash/redis";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from "url";
 import { spawn, SpawnOptionsWithoutStdio } from "child_process";
 import { prisma } from "./db.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const TIMEOUT_MS = 5000;
 const MAX_OUTPUT_BYTES = 1024 * 512; // 512 KB cap — prevents memory exhaustion from runaway output
@@ -160,14 +164,12 @@ async function runSubmission(
 }
 
 async function main() {
-    const client = createClient();
+    const redis = Redis.fromEnv();
 
-    client.on("error", (err) => console.error("Redis client error:", err));
-    await client.connect();
-    console.log("Connected to Redis");
+    console.log("Connected to Upstash Redis");
 
     while (true) {
-        const raw = await client.rPop("problems");
+        const raw = await redis.rpop("problems");
 
         if (!raw) {
             await new Promise((r) => setTimeout(r, 1000));
